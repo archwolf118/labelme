@@ -289,11 +289,14 @@ class Canvas(QtWidgets.QWidget):
                 self.hVertex = None
                 self.prevhShape = self.hShape = shape
                 self.prevhEdge = self.hEdge = index_edge
+                QtWidgets.QToolTip.setFont(QtGui.QFont('SansSerif', 18))
+                # QtWidgets.QToolTip
                 self.setToolTip(
                     self.tr("Click & drag to move shape '%s'") % shape.label
                 )
                 if shape.content!="":
                     self.setToolTip(self.tr(shape.content))
+                    # QtWidgets.QToolTip.showText(ev.pos(), self.tr(shape.content))
                 self.setStatusTip(self.toolTip())
                 self.overrideCursor(CURSOR_GRAB)
                 self.update()
