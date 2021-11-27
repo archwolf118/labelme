@@ -11,7 +11,7 @@ pip install -r requirements.txt
 ## Run
 
 ```
-python __main__.py
+python __main__.py --nodata
 ```
 
 ## Barcode Annotation Relevant Changes

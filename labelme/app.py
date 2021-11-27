@@ -1077,15 +1077,39 @@ class MainWindow(QtWidgets.QMainWindow):
         shape.flags = flags
         shape.group_id = group_id
         shape.content = content
-        if shape.group_id is None:
-            item.setText(shape.label)
-        else:
-            item.setText("{} ({})".format(shape.label, shape.group_id))
-        self.setDirty()
+
+        # add new label
         if not self.uniqLabelList.findItemsByLabel(shape.label):
-            item = QtWidgets.QListWidgetItem()
-            item.setData(Qt.UserRole, shape.label)
-            self.uniqLabelList.addItem(item)
+            item1 = self.uniqLabelList.createItemFromLabel(shape.label)
+            self.uniqLabelList.addItem(item1)
+            rgb = self._get_rgb_by_label(shape.label)
+            self.uniqLabelList.setItemLabel(item1, shape.label, rgb)
+            self.labelDialog.addLabelHistory(shape.label)
+        
+        rgb = self._get_rgb_by_label(shape.label)
+        r, g, b = rgb
+        if shape.group_id is None:
+            item.setText('{} <font color="#{:02x}{:02x}{:02x}">●</font> {}'.format(shape.label, r, g, b, shape.content if shape.content != None else ""))
+        else:
+            item.setText('{} ({}) <font color="#{:02x}{:02x}{:02x}">●</font> {}'.format(shape.label, shape.group_id, r, g, b, shape.content if shape.content != None else ""))
+
+        self.setDirty()
+
+        #update line color 
+        shape.line_color = QtGui.QColor(r, g, b)
+        shape.vertex_fill_color = QtGui.QColor(r, g, b)
+        shape.hvertex_fill_color = QtGui.QColor(255, 255, 255)
+        shape.fill_color = QtGui.QColor(r, g, b, 128)
+        shape.select_line_color = QtGui.QColor(255, 255, 255)
+        shape.select_fill_color = QtGui.QColor(r, g, b, 155)
+
+        # if not self.uniqLabelList.findItemsByLabel(shape.label):
+        #     item = QtWidgets.QListWidgetItem()
+        #     item.setData(Qt.UserRole, shape.label)
+        #     self.uniqLabelList.addItem(item)
+
+
+        
 
     def fileSearchChanged(self):
         self.importDirImages(
@@ -1129,7 +1153,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def addLabel(self, shape):
         if shape.group_id is None:
-            text = shape.label
+            text = "{}".format(shape.label)
         else:
             text = "{} ({})".format(shape.label, shape.group_id)
         label_list_item = LabelListWidgetItem(text, shape)
@@ -1147,8 +1171,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         r, g, b = rgb
         label_list_item.setText(
-            '{} <font color="#{:02x}{:02x}{:02x}">●</font>'.format(
-                text, r, g, b
+            '{} <font color="#{:02x}{:02x}{:02x}">●</font> {}'.format(
+                text, r, g, b, shape.content if shape.content != None else ""
             )
         )
         shape.line_color = QtGui.QColor(r, g, b)
