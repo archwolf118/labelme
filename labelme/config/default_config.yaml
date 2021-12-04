@@ -92,7 +92,7 @@ shortcuts:
   create_line: null
   create_point: null
   create_linestrip: null
-  edit_polygon: Ctrl+J
+  edit_polygon: Ctrl+K
   delete_polygon: Delete
   duplicate_polygon: Ctrl+D
   undo: Ctrl+Z

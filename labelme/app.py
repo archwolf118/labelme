@@ -1109,7 +1109,71 @@ class MainWindow(QtWidgets.QMainWindow):
         #     self.uniqLabelList.addItem(item)
 
 
+    def updateLabel(self, item, text, flags, group_id):
+        # if item and not isinstance(item, LabelListWidgetItem):
+        #     raise TypeError("item must be LabelListWidgetItem type")
+
+        # if not self.canvas.editing():
+        #     return
+        # if not item:
+        #     item = self.currentItem()
+        # if item is None:
+        #     return
+        shape = item.shape()
+        # content=shape.content
+        # if shape is None:
+        #     return
+        # text, flags, group_id, content = self.labelDialog.popUp(
+        #     text=shape.label,
+        #     flags=shape.flags,
+        #     group_id=shape.group_id,
+        #     content=shape.content
+        # )
+        # if text is None:
+        #     return
+        # if not self.validateLabel(text):
+        #     self.errorMessage(
+        #         self.tr("Invalid label"),
+        #         self.tr("Invalid label '{}' with validation type '{}'").format(
+        #             text, self._config["validate_label"]
+        #         ),
+        #     )
+        #     return
+        shape.label = text
+        shape.flags = flags
+        shape.group_id = group_id
+        # shape.content = content
+
+        # add new label
+        if not self.uniqLabelList.findItemsByLabel(shape.label):
+            item1 = self.uniqLabelList.createItemFromLabel(shape.label)
+            self.uniqLabelList.addItem(item1)
+            rgb = self._get_rgb_by_label(shape.label)
+            self.uniqLabelList.setItemLabel(item1, shape.label, rgb)
+            self.labelDialog.addLabelHistory(shape.label)
         
+        rgb = self._get_rgb_by_label(shape.label)
+        r, g, b = rgb
+        if shape.group_id is None:
+            item.setText('{} <font color="#{:02x}{:02x}{:02x}">●</font> {}'.format(shape.label, r, g, b, shape.content if shape.content != None else ""))
+        else:
+            item.setText('{} ({}) <font color="#{:02x}{:02x}{:02x}">●</font> {}'.format(shape.label, shape.group_id, r, g, b, shape.content if shape.content != None else ""))
+
+        self.setDirty()
+
+        #update line color 
+        shape.line_color = QtGui.QColor(r, g, b)
+        shape.vertex_fill_color = QtGui.QColor(r, g, b)
+        shape.hvertex_fill_color = QtGui.QColor(255, 255, 255)
+        shape.fill_color = QtGui.QColor(r, g, b, 128)
+        shape.select_line_color = QtGui.QColor(255, 255, 255)
+        shape.select_fill_color = QtGui.QColor(r, g, b, 155)
+
+        # if not self.uniqLabelList.findItemsByLabel(shape.label):
+        #     item = QtWidgets.QListWidgetItem()
+        #     item.setData(Qt.UserRole, shape.label)
+        #     self.uniqLabelList.addItem(item)
+
 
     def fileSearchChanged(self):
         self.importDirImages(
@@ -2087,3 +2151,17 @@ class MainWindow(QtWidgets.QMainWindow):
             images.append(filename)
         self.intelligenceHelper.detectBarcodesOfAll(images)
 
+    def mouseReleaseEvent(self, ev):
+        items = self.labelList.selectedItems()
+        if ev.button() == QtCore.Qt.RightButton:
+            if len(items) == 0:
+                pass
+            elif len(items) == 1:
+                self.editLabel(items[-1])
+            else:
+                self.editLabel(items[-1])
+                text = items[-1].shape().label
+                flags = items[-1].shape().flags
+                group_id = items[-1].shape().group_id
+                for item in items[:-1]:
+                    self.updateLabel(item, text, flags, group_id)

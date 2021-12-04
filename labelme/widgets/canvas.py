@@ -86,6 +86,7 @@ class Canvas(QtWidgets.QWidget):
         self.setMouseTracking(True)
         self.setFocusPolicy(QtCore.Qt.WheelFocus)
 
+
     def fillDrawing(self):
         return self._fill_drawing
 
@@ -375,47 +376,59 @@ class Canvas(QtWidgets.QWidget):
                 self.repaint()
         elif ev.button() == QtCore.Qt.RightButton and self.editing():
             group_mode = int(ev.modifiers()) == QtCore.Qt.ControlModifier
+            # print(group_mode)
             self.selectShapePoint(pos, multiple_selection_mode=group_mode)
             self.prevPoint = pos
             self.repaint()
 
-    def mouseReleaseEvent(self, ev):
-        if ev.button() == QtCore.Qt.RightButton:
-            menu = self.menus[len(self.selectedShapesCopy) > 0]
-            self.restoreCursor()
-            if (
-                not menu.exec_(self.mapToGlobal(ev.pos()))
-                and self.selectedShapesCopy
-            ):
-                # Cancel the move by deleting the shadow copy.
-                self.selectedShapesCopy = []
-                self.repaint()
-        elif ev.button() == QtCore.Qt.LeftButton and self.selectedShapes:
-            self.overrideCursor(CURSOR_GRAB)
-            if (
-                self.editing()
-                and int(ev.modifiers()) == QtCore.Qt.ShiftModifier
-            ):
-                # Add point to line if: left-click + SHIFT on a line segment
-                self.addPointToEdge()
-        elif ev.button() == QtCore.Qt.LeftButton and self.selectedVertex():
-            if (
-                self.editing()
-                and int(ev.modifiers()) == QtCore.Qt.ShiftModifier
-            ):
-                # Delete point if: left-click + SHIFT on a point
-                self.removeSelectedPoint()
+    # def mouseReleaseEvent(self, ev):
+    #     # if ev.button() == QtCore.Qt.RightButton:
+    #     #     menu = self.menus[len(self.selectedShapesCopy) > 0]
+    #     #     print("aaa")
+    #     #     print(self.selectedShapes)
+    #     #     # print(len(self.selectedShapes))
+    #     #     print(self.selectedShapes[-1].label)
+    #     #     self.restoreCursor()
 
-        if self.movingShape and self.hShape:
-            index = self.shapes.index(self.hShape)
-            if (
-                self.shapesBackups[-1][index].points
-                != self.shapes[index].points
-            ):
-                self.storeShapes()
-                self.shapeMoved.emit()
+    #         # from ..app import MainWindow
+    #         # win = MainWindow()
+    #         # if len(self.selectedShapes) == 1:
+    #         #     print(self.selectedShapes[0].label)
+    #         #     win.editLabel(self.selectedShapes[0])
 
-            self.movingShape = False
+    #         # if (
+    #         #     not menu.exec_(self.mapToGlobal(ev.pos()))
+    #         #     and self.selectedShapesCopy
+    #         # ):
+    #         #     # Cancel the move by deleting the shadow copy.
+    #         #     self.selectedShapesCopy = []
+    #         #     self.repaint()
+    #     if ev.button() == QtCore.Qt.LeftButton and self.selectedShapes:
+    #         self.overrideCursor(CURSOR_GRAB)
+    #         if (
+    #             self.editing()
+    #             and int(ev.modifiers()) == QtCore.Qt.ShiftModifier
+    #         ):
+    #             # Add point to line if: left-click + SHIFT on a line segment
+    #             self.addPointToEdge()
+    #     elif ev.button() == QtCore.Qt.LeftButton and self.selectedVertex():
+    #         if (
+    #             self.editing()
+    #             and int(ev.modifiers()) == QtCore.Qt.ShiftModifier
+    #         ):
+    #             # Delete point if: left-click + SHIFT on a point
+    #             self.removeSelectedPoint()
+
+    #     if self.movingShape and self.hShape:
+    #         index = self.shapes.index(self.hShape)
+    #         if (
+    #             self.shapesBackups[-1][index].points
+    #             != self.shapes[index].points
+    #         ):
+    #             self.storeShapes()
+    #             self.shapeMoved.emit()
+
+    #         self.movingShape = False
 
     def endMove(self, copy):
         assert self.selectedShapes and self.selectedShapesCopy
