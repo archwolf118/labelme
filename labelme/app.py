@@ -718,13 +718,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Custom context menu for the canvas widget:
         utils.addActions(self.canvas.menus[0], self.actions.menu)
-        utils.addActions(
-            self.canvas.menus[1],
-            (
-                action("&Copy here", self.copyShape),
-                action("&Move here", self.moveShape),
-            ),
-        )
+        # utils.addActions(
+        #     self.canvas.menus[1],
+        #     (
+        #         action("&Copy here", self.copyShape),
+        #         action("&Move here", self.moveShape),
+        #     ),
+        # )
 
         self.tools = self.toolbar("Tools")
         # Menu buttons on Left

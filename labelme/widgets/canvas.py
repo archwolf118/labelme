@@ -236,17 +236,17 @@ class Canvas(QtWidgets.QWidget):
             return
 
         # Polygon copy moving.
-        if QtCore.Qt.RightButton & ev.buttons():
-            if self.selectedShapesCopy and self.prevPoint:
-                self.overrideCursor(CURSOR_MOVE)
-                self.boundedMoveShapes(self.selectedShapesCopy, pos)
-                self.repaint()
-            elif self.selectedShapes:
-                self.selectedShapesCopy = [
-                    s.copy() for s in self.selectedShapes
-                ]
-                self.repaint()
-            return
+        # if QtCore.Qt.RightButton & ev.buttons():
+        #     if self.selectedShapesCopy and self.prevPoint:
+        #         self.overrideCursor(CURSOR_MOVE)
+        #         self.boundedMoveShapes(self.selectedShapesCopy, pos)
+        #         self.repaint()
+        #     elif self.selectedShapes:
+        #         self.selectedShapesCopy = [
+        #             s.copy() for s in self.selectedShapes
+        #         ]
+        #         self.repaint()
+        #     return
 
         # Polygon/Vertex moving.
         if QtCore.Qt.LeftButton & ev.buttons():
