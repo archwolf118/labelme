@@ -1251,6 +1251,9 @@ class MainWindow(QtWidgets.QMainWindow):
             item = self.uniqLabelList.findItemsByLabel(label)[0]
             label_id = self.uniqLabelList.indexFromItem(item).row() + 1
             label_id += self._config["shift_auto_shape_color"]
+            # print(LABEL_COLORMAP[:10])
+            if label_id >= 8:
+                label_id = label_id + 2
             return LABEL_COLORMAP[label_id % len(LABEL_COLORMAP)]
         elif (
             self._config["shape_color"] == "manual"

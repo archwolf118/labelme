@@ -9,9 +9,9 @@ pip install -r requirements.txt
 ```
 
 ## Run
-
+predefine labels use --labels， like：
 ```
-python __main__.py --nodata
+python __main__.py --nodata --labels a,b,c
 ```
 
 ## Barcode Annotation Relevant Changes
