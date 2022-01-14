@@ -2155,6 +2155,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.intelligenceHelper.detectBarcodesOfAll(images)
 
     def mouseReleaseEvent(self, ev):
+        self.canvas.mouseReleaseEvent1(ev)
         items = self.labelList.selectedItems()
         if ev.button() == QtCore.Qt.RightButton:
             if len(items) == 0:
